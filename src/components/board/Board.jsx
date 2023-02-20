@@ -5,7 +5,8 @@ import Xicon from '../icons/Xicon'
 import BoardCard from './BoardCard'
 
 const Board = () => {
-    const {cells, xnext, ties, winnerLine} = useContext(GameContext)
+    const { cells, xnext, ties, winnerLine, handleRestart, checkUser } =
+      useContext(GameContext);
   return (
     <div className="board">
       <div className="board-header">
@@ -24,7 +25,7 @@ const Board = () => {
         </div>
 
         <div>
-          <button className="btn btn--sm board_redo">
+          <button className="btn btn--sm board_redo" onClick={handleRestart}>
             <svg
               aria-hidden="true"
               focusable="false"
@@ -55,15 +56,15 @@ const Board = () => {
       </div>
       <div className="board-footer">
         <div className="card bg-blue">
-          <p className="text-light">x (you)</p>
+          <p className="text-light">x {checkUser("x")}</p>
           <strong className="text-2xl">{ties.x}</strong>
         </div>
         <div className="card bg-light">
-          <p className="text-light"> (ties)</p>
+          <p className="text-light"> ties</p>
           <strong className="text-2xl">{ties.x + ties.o}</strong>
         </div>
         <div className="card bg-yellow">
-          <p className="text-light">o (cpu)</p>
+          <p className="text-light">o {checkUser('o')}</p>
           <strong className="text-2xl">{ties.o}</strong>
         </div>
       </div>

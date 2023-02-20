@@ -1,5 +1,5 @@
-import { createContext, useContext, useState } from "react";
-import { clacWinner } from "../helper/game";
+import { createContext, useContext, useEffect, useState } from "react";
+import { checkMove, clacWinner } from "../helper/game";
 import { ModalContext } from "./ModalContext";
 
 export const GameContext = createContext();
@@ -9,11 +9,28 @@ export const GameProvider = ({ children }) => {
     const [activeUser, setActiveUser] = useState('x')
     const [winner, setWinner] = useState(null)
     const [winnerLine, setWinnerLine] = useState(null)
-    const [gameMode, setGameMode] = useState('single')
+    const [gameMode, setGameMode] = useState('cpu')
     const [cells, setCells] = useState(new Array(9).fill(''))
     const [xnext, setXnext] = useState(false)
     const { showModal, setModalType, hideModal } = useContext(ModalContext);
     const [ties, setTies] = useState({x:0, o:0})
+
+    useEffect(() => {
+        checkDraw()
+        const currentUser = xnext ? 'o' : 'x'
+        if(gameMode === 'cpu' && currentUser !== activeUser && !winner) {
+            cpuMove(cells)
+        }
+    }, [xnext, winner, gameMode])
+
+    const cpuMove = (cells) => {
+        const nextMove = checkMove(cells, activeUser === 'x' ? 'o' : 'x')
+        let newCells = [...cells]
+        newCells[nextMove] = activeUser === 'x' ? 'o' : 'x'
+        setCells(newCells)
+        setXnext(!xnext)
+        checkWinner(newCells)
+    }
 
     const handleNext = () => {
         setCells(new Array(9).fill(""));
@@ -34,9 +51,15 @@ export const GameProvider = ({ children }) => {
         hideModal()
     }
 
+    const handleRestart = () => {
+        showModal()
+        setModalType('restart')
+    }
+
     const handleCellClick = (index) => {
+        if(cells[index] !== '' || winner) return
         const currentPlayer = xnext ? 'o' : 'x'
-        if(gameMode === 'single' && currentPlayer !== activeUser) return
+        if(gameMode === 'cpu' && currentPlayer !== activeUser) return
         let newCells = [...cells]
         newCells[index] = !xnext ? 'x' : 'o'
         setCells(newCells)
@@ -60,9 +83,28 @@ export const GameProvider = ({ children }) => {
             }
     }
 
+    const checkDraw = () => {
+        const moves = cells.filter(cell => cell === '')
+        if(moves.length === 0) {
+            setWinner('draw')
+            setModalType('winner')
+            showModal()
+        }
+    }
+
     const changeMode = (mode) => {
         setGameMode(mode)
         setGame('game')
+    }
+
+    const checkUser = (user) => {
+        if(gameMode === 'cpu') {
+            if(user === activeUser) {
+                return 'You'
+            } else {
+                return 'CPU'
+            }
+        }
     }
 
     return (
@@ -83,6 +125,8 @@ export const GameProvider = ({ children }) => {
           handleCellClick,
           handleReset,
           handleNext,
+          handleRestart,
+          checkUser,
         }}
       >
         {children}

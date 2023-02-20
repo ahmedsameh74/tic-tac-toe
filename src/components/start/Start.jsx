@@ -29,7 +29,7 @@ const Start = () => {
         <p className="text-light">remember: x goes first</p>
       </div>
       <div className="start_btns">
-        <button className="btn btn--secondary" onClick={() => changeMode('single')}>new game (vs cpu)</button>
+        <button className="btn btn--secondary" onClick={() => changeMode('cpu')}>new game (vs cpu)</button>
         <button className="btn btn--primary" onClick={() => changeMode('multi')}>new game (vs player)</button>
       </div>
     </div>

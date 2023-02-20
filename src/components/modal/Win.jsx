@@ -9,16 +9,32 @@ const Win = () => {
   
   return (
     <div className="score">
-      <p>you win!</p>
-      <h3>{winner === "x" ? <Xicon /> : <Oicon />} Takes the round</h3>
-      <div className="score_btn">
-        <button className="btn btn-sm " onClick={handleReset}>
-          Quit
-        </button>
-        <button className="btn btn--secondary" onClick={handleNext}>
-          Next Round
-        </button>
-      </div>
+      {winner && winner !== "draw" ? (
+        <>
+          <p>you win!</p>
+          <h3 className={winner === 'o' ? 'text-secondary' : 'text-primary'}>{winner === "x" ? <Xicon /> : <Oicon />} Takes the round</h3>
+          <div className="score_btn">
+            <button className="btn btn-sm " onClick={handleReset}>
+              Quit
+            </button>
+            <button className="btn btn--secondary" onClick={handleNext}>
+              Next Round
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+        <h3>no winner!</h3>
+        <div className="score_btn">
+            <button className="btn btn-sm " onClick={handleReset}>
+              Quit
+            </button>
+            <button className="btn btn--secondary" onClick={handleNext}>
+              Next Round
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
