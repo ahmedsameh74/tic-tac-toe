@@ -15,13 +15,16 @@ export const GameProvider = ({ children }) => {
     const { showModal, setModalType, hideModal } = useContext(ModalContext);
     const [ties, setTies] = useState({x:0, o:0})
 
+    
     useEffect(() => {
         checkDraw()
         const currentUser = xnext ? 'o' : 'x'
+        // console.log(currentUser, activeUser)
         if(gameMode === 'cpu' && currentUser !== activeUser && !winner) {
+            // console.log(game, activeUser, winner, gameMode, xnext, ties, winnerLine, cells)
             cpuMove(cells)
         }
-    }, [xnext, winner, gameMode])
+    }, [xnext, winner, gameMode, activeUser, cells])
 
     const cpuMove = (cells) => {
         const nextMove = checkMove(cells, activeUser === 'x' ? 'o' : 'x')

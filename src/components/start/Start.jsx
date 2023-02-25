@@ -6,6 +6,8 @@ import Xicon from "../icons/Xicon";
 const Start = () => {
   const { activeUser, setActiveUser, changeMode } = useContext(GameContext);
 
+  console.log(activeUser)
+
   return (
     <div className="start">
       <div className="start_header">
